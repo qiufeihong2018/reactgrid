@@ -557,27 +557,22 @@ export type UncertainCompatible<TCell extends Cell> = Uncertain<TCell> & {
     /** Numeric value of a cell, if there is no numeric value representation use `NaN` */
     value: number;
 }
-
 /**
- * `Row` contains essential information about the grid row. 
- * `cells` field allows you to declare an array of objects that extends `Cell` base interface.
+ * `Row` 包含关于网格行的重要信息。
+ * `cells` 属性允许您声明一个扩展了 `Cell` 基础接口的对象数组。
  * 
  * @see https://reactgrid.com/docs/3.1/7-api/0-interfaces/2-row/
  */
 export interface Row<TCell extends Cell = DefaultCellTypes> {
-    /** Unique `Id` in all rows array */
+    /** 所有行数组中的唯一标识符 */
     readonly rowId: Id;
-    /** Array of `Cell` objects */
+    /** `Cell` 对象的数组 */
     readonly cells: TCell[];
-    /** Height of each grid row (in default set to `25` in px) */
+    /** 每个网格行的高度（默认为 `25` 像素） */
     readonly height?: number;
-    /** 
-     * Property that allows row to change is position in grid, 
-     * default: `false` (row reorder implementation is on the developer's side) 
-     */
+    /** 允许行在网格中更改其位置的属性，默认为 `false`（行重新排序由开发者实现） */
     readonly reorderable?: boolean;
 }
-
 /**
  * Menu option element displayed in context menu
  * 

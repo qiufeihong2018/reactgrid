@@ -150,7 +150,7 @@ function handleContextMenuPaste(state: State) {
               });
             }
           }
-          return pasteData(
+          const _data = pasteData(
             proState,
             clipboardRows.map((line, rowIdx) => {
               return line.split("\t").map<Compatible<Cell>>((text, colIdx) => {
@@ -177,6 +177,7 @@ function handleContextMenuPaste(state: State) {
               });
             })
           );
+          return _data;
         })
       )
       .catch(({ message }) => {
