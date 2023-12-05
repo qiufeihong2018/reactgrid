@@ -44,6 +44,14 @@ export class DefaultBehavior extends Behavior {
     ) as State;
   }
 
+  /**
+   * 根据事件、位置和状态获取新的行为
+   *
+   * @param event - 触发事件
+   * @param location - 位置信息
+   * @param state - 状态信息
+   * @returns 新的行为
+   */
   private getNewBehavior(
     event: PointerEvent,
     location: PointerLocation,
@@ -51,6 +59,9 @@ export class DefaultBehavior extends Behavior {
   ): Behavior {
     // changing behavior will disable all keyboard event handlers
     const target = event.target as HTMLDivElement;
+
+    // 如果是鼠标或触摸事件，并且目标元素是调整列大小的元素
+    // 并且位置在第一行，并且可调整的列，并且点击位置在列宽度范围内
     if (
       ((event.pointerType === "mouse" &&
         target.className === "rg-resize-handle") ||
@@ -67,6 +78,8 @@ export class DefaultBehavior extends Behavior {
     ) {
       return new ResizeColumnBehavior();
     } else if (
+      // 如果是启用列选择，并且位置在第一行，并且目标元素是选中的列
+      // 并且不是选择键的事件，并且选择模式为列，并且该列可以重新排序
       state.enableColumnSelection &&
       location.row.idx === 0 &&
       state.selectedIds.includes(location.column.columnId) &&
@@ -76,6 +89,7 @@ export class DefaultBehavior extends Behavior {
     ) {
       return new ColumnReorderBehavior();
     } else if (
+      // 如果是启用列选择，并且位置在第一行，并且目标元素不是列的选择或重新排序元素
       state.enableColumnSelection &&
       location.row.idx === 0 &&
       target.className !== "rg-fill-handle" &&
@@ -83,6 +97,8 @@ export class DefaultBehavior extends Behavior {
     ) {
       return new ColumnSelectionBehavior();
     } else if (
+      // 如果是启用行选择，并且位置在第一列，并且目标元素是选中的行
+      // 并且不是选择键的事件，并且选择模式为行，并且该行可以重新排序
       state.enableRowSelection &&
       location.column.idx === 0 &&
       state.selectedIds.includes(location.row.rowId) &&
@@ -92,6 +108,7 @@ export class DefaultBehavior extends Behavior {
     ) {
       return new RowReorderBehavior();
     } else if (
+      // 如果是启用行选择，并且位置在第一列，并且目标元素不是行的选择或重新排序元素
       state.enableRowSelection &&
       location.column.idx === 0 &&
       target.className !== "rg-fill-handle" &&

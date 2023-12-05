@@ -1,12 +1,18 @@
 import { Location, GridColumn, Range, GridRow, Id } from "../../core";
 import { State } from "../Model/State";
 import { newLocation } from "./newLocation";
-
+/**
+ * 重置选区
+ * 
+ * @param state - 状态对象
+ * @param location - 位置对象
+ * @returns 新的状态对象
+ */
 export function resetSelection(state: State, location: Location): State {
   const newRange = state.cellMatrix.getRange(location, location);
 
   state?.props?.onSelectionChanged && state.props.onSelectionChanged([newRange]);
-  
+
   return {
     ...state,
     activeSelectedRangeIdx: 0,
@@ -16,7 +22,6 @@ export function resetSelection(state: State, location: Location): State {
     selectionMode: "range",
   };
 }
-
 export function selectRange(
   state: State,
   range: Range,

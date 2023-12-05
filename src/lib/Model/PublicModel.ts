@@ -123,23 +123,23 @@ export interface ReactGridProps {
      */
     readonly onFocusLocationChanging?: (location: CellLocation) => boolean;
 
-    /** 
-     * Called when selection has been changed.
-     * 
-     * @param {Range[]} selectedRanges array of selected cell locations
+    /**
+     * 当选择发生改变时被调用。
+     *
+     * @param {Range[]} selectedRanges 选中单元格位置的数组
      * @returns {void}
      */
     readonly onSelectionChanged?: (selectedRanges: Range[]) => void;
 
     /**
-     * Called when trying to change selection.
-     * You are able to prevent selection changing.
-     * 
-     * @param {Range[]} selectedRanges array of selected cell locations
-     * @returns {boolean} Return `false` to prevent selection changing
+     * 当尝试更改选择时被调用。
+     * 您可以阻止选择更改。
+     *
+     * @param {Range[]} selectedRanges 选中单元格位置的数组
+     * @returns {boolean} 返回 `false` 来阻止选择更改
      */
     readonly onSelectionChanging?: (selectedRanges: Range[]) => boolean;
-
+    
     /** 
      * Called when column resize action was finished
      * 

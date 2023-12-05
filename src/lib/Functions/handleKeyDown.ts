@@ -642,7 +642,16 @@ function resizeSelectionRight(
         )
     : state;
 }
-
+/**
+ * 调整选区的大小
+ * @param state 状态对象
+ * @param firstColIdx 第一列的索引
+ * @param lastColIdx 最后一列的索引
+ * @param firstRowIdx 第一行的索引
+ * @param lastRowIdx 最后一行的索引
+ * @param scrollDirection 滚动方向，默认为 `vertical`
+ * @returns 更新后的状态对象
+ */
 function resizeSelection(
   state: State,
   firstColIdx: number,
@@ -690,9 +699,9 @@ function resizeSelection(
   }
 
   if (state.props?.onSelectionChanging && !state.props.onSelectionChanging(selectedRanges)) {
-    // If selection change is canceled we can just return the state here
-    // TODO: We could try to find the "best possible selection", but I've not yet found a use case for this and - as I discovered - it isn't trivial
-    // TODO: Also, we could add a external way to change the selection so the users could implement this themselves
+    // 如果选择范围改变被取消，我们可以直接返回状态对象
+    // TODO: 可是没有找到调整选择范围的实用场景，而且我还没有找到一个简单的方法 - 就像我最近发现的那样，这并不是一个简单的问题
+    // TODO: 另外，我们可以添加一个外部更改选择的方法，这样用户就可以自己实现这个功能
     return state;
   }
 
