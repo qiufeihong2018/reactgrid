@@ -4,6 +4,14 @@ import { getReactGridOffsets, getSizeOfElement, getStickyOffset, getVisibleSizeO
 import { State } from '../Model/State';
 
 // TODO: rewrite without division
+/**
+ * 从客户端获取位置
+ * @param state 状态对象
+ * @param clientX 客户端X坐标
+ * @param clientY 客户端Y坐标
+ * @param favorScrollableContent 选择可滚动内容的方向，默认为无偏好的方向
+ * @returns 返回指针位置对象
+ */
 export function getLocationFromClient(
     state: State,
     clientX: number,
@@ -12,13 +20,13 @@ export function getLocationFromClient(
   ): PointerLocation {
     if (!state.reactGridElement) {
       throw new Error(
-        `"state.reactGridElement" field should be initiated before calling the "getBoundingClientRect()"`
+        `"state.reactGridElement"字段在调用"getBoundingClientRect()"之前应该被初始化`
       );
     }
     const { left, top } = state.reactGridElement.getBoundingClientRect();
     const viewportX = clientX - left;
     const viewportY = clientY - top;
-  
+
     const { cellY, row } = getRow(
       state,
       viewportY,

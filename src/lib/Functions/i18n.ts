@@ -12,6 +12,11 @@ const defultTranslations: Required<TextLabels> = {
     actionNotSupported: 'This action is not supported in this browser.'
 }
 
+/**
+ * 根据状态生成 i18n 标签
+ * @param state 状态对象
+ * @returns Required<TextLabels> 对象
+ */
 export function i18n(state: State): Required<TextLabels> {
     return {
         ...defultTranslations,

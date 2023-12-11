@@ -6,6 +6,13 @@ import { getCompatibleCellAndTemplate } from './getCompatibleCellAndTemplate';
 import { tryAppendChange } from './tryAppendChange';
 import { Id } from '../Model/PublicModel';
 
+/**
+ * 获取要复制的数据
+ * @param state - 应用程序的状态对象
+ * @param activeSelectedRange - 激活的选中范围
+ * @param removeValues - 是否移除值，默认为false
+ * @returns { div: HTMLDivElement, text: string } - 包含HTML div元素和文本内容的对象
+ */
 export function getDataToCopy(
     state: State,
     activeSelectedRange: Range,
@@ -54,14 +61,31 @@ export function getDataToCopy(
   }
 
 // ? unused?
+/**
+ * 处理单个单元格
+ * @param tableRow 表格行元素
+ * @param state 状态对象
+ * @param location 位置对象
+ */
 export function processSingleCell(tableRow: HTMLTableRowElement, state: State, location: Location): void {
     const tableCell: HTMLTableDataCellElement = tableRow.insertCell();
     const { cell } = getCompatibleCellAndTemplate(state, location);
+
+    // 设置单元格文本内容为 cell 的文本内容，如果不存在则为一个空格
     tableCell.textContent = cell.text ? cell.text : ' ';
+
+    // 设置单元格的 data-reactgrid 属性为 cell 的 JSON 字符串形式
     tableCell.setAttribute('data-reactgrid', JSON.stringify(cell));
+
+    // 设置单元格的边框为 1px 的实线灰色边框
     tableCell.style.border = '1px solid #D3D3D3';
 }
 
+/**
+ * 创建HTML元素
+ * @param activeSelectedRange - 当前选中的范围
+ * @returns { div: HTMLDivElement, table: HTMLTableElement, location: Location } - 返回包含创建的HTML元素的div、table和location的对象
+ */
 export function createHTMLElements(activeSelectedRange: Range): { div: HTMLDivElement, table: HTMLTableElement, location: Location } {
     const div = document.createElement('div');
     const table = document.createElement('table');

@@ -8,6 +8,11 @@ export const VS_PAGE_HEIGHT = 400;
 export const VS_PAGE_WIDTH = 300;
 const ADDITONAL_INDEX = 1; // is needed for getting last element in array
 
+/**
+ * 重新计算可见范围
+ * @param state 状态对象
+ * @returns 更新后的状态对象
+ */
 export function recalcVisibleRange(state: State): State {
     if(state.disableVirtualScrolling){
         const {rows, columns} = state.cellMatrix.scrollableRange;
@@ -34,6 +39,13 @@ export function recalcVisibleRange(state: State): State {
 }
 
 
+/**
+ * 获取可见区域中滚动元素的大小
+ * @param state - 应用状态对象
+ * @param heights - 高度数组
+ * @param widths - 宽度数组
+ * @returns { height: number, width: number } - 可见区域中滚动元素的大小对象
+ */
 export function getVisibleScrollableSize(state: State, heights: number[], widths: number[]): { height: number, width: number } {
     const { height, width } = getVisibleSizeOfReactGrid(state);
     const sum = (a: number, b: number) => a + b;
@@ -43,6 +55,13 @@ export function getVisibleScrollableSize(state: State, heights: number[], widths
     }
 }
 
+/**
+ * 获取可见列
+ * 
+ * @param state - 状态对象
+ * @param scrollableWidth - 滚动宽度
+ * @returns 可见列数组
+ */
 export function getVisibleColumns(state: State, scrollableWidth: number): GridColumn[] {
     const { columns } = state.cellMatrix.scrollableRange;
     const { left } = getReactGridOffsets(state);
@@ -61,6 +80,14 @@ export function getVisibleRows(state: State, scrollableHeight: number): GridRow[
     return rows.slice(firstIndex, lastIndex + ADDITONAL_INDEX);
 }
 
+/**
+ * 行二分查找函数
+ * @param arr 数组，包含网格行
+ * @param val 要查找的值
+ * @param start 开始索引，默认为0
+ * @param end 结束索引，默认为数组长度减1
+ * @returns 返回查找到的索引
+ */
 function rowBinarySearch(arr: GridRow[], val: number, start = 0, end = arr.length - 1): number {
     const mid = (start + end) >> 1;
     if (mid < 0)

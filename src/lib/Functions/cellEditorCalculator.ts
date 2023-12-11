@@ -54,7 +54,11 @@ const calculatedYAxisOffset = (location: Location, state: State): number => {
   }
   return 0;
 }
-
+/**
+ * 计算单元格编辑器的位置
+ * @param positionState 单元格的位置状态
+ * @returns 单元格编辑器的偏移量
+ */
 export const calculateCellEditorPosition = (positionState: PositionState): CellEditorOffset => {
   const { state, location } = positionState;
   const { scrollTop, scrollLeft } = getScrollOfScrollableElement(state.scrollableElement);
