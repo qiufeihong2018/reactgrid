@@ -53,23 +53,33 @@ export class RowSelectionBehavior extends Behavior {
     );
   }
 
-  handlePointerUp(event: MouseEvent | PointerEvent, location: PointerLocation, state: State<CellMatrix, Behavior<MouseEvent | PointerEvent>>): State<CellMatrix, Behavior<MouseEvent | PointerEvent>> {
-    if (state.props?.onSelectionChanging && !state.props.onSelectionChanging(state.selectedRanges)) {
-        const filteredRanges = [
-            ...state.selectedRanges,
-        ].filter((_, index) => index !== state.activeSelectedRangeIdx);
+  handlePointerUp(
+    event: MouseEvent | PointerEvent,
+    location: PointerLocation,
+    state: State<CellMatrix, Behavior<MouseEvent | PointerEvent>>
+  ): State<CellMatrix, Behavior<MouseEvent | PointerEvent>> {
+    if (
+      state.props?.onSelectionChanging &&
+      !state.props.onSelectionChanging(state.selectedRanges)
+    ) {
+      // Cancel the latest selection
+      const filteredRanges = [...state.selectedRanges].filter(
+        (_, index) => index !== state.activeSelectedRangeIdx
+      );
 
-        return {
-            ...state,
-            selectedRanges: filteredRanges,
-            activeSelectedRangeIdx: filteredRanges.length - 1,
-        };
+      return {
+        ...state,
+        selectedRanges: filteredRanges,
+        activeSelectedRangeIdx: filteredRanges.length - 1,
+      };
     }
 
-    state.props?.onSelectionChanged && state.props.onSelectionChanged(state.selectedRanges);
+    state.props?.onSelectionChanged &&
+      state.props.onSelectionChanged(state.selectedRanges);
 
     return state;
-}
+  }
+
   handleContextMenu(event: PointerEvent, state: State): State {
     return handleContextMenu(event, state);
   }
