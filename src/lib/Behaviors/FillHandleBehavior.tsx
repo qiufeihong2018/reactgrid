@@ -73,20 +73,29 @@ export class FillHandleBehavior extends Behavior {
       selectedCells: Compatible<Cell>[],
       cellsToFill: Compatible<Cell>[]
     ): Compatible<Cell>[] => {
+      // 根据选中的单元格的值生成一个数字数组
       const numbers = selectedCells.map((cell) => cell.value);
+
+      // 根据数字数组和对应的索引数组找到回归函数的参数
       const parameters = this.findRegressionFunction(
         numbers,
-
         Array.from({ length: numbers.length }, (_, index) => index + 1)
       );
+
+      // 检查回归函数的参数是否是NaN
       const areParametersNaNs = isNaN(parameters.a) && isNaN(parameters.b);
+
+      // 根据回归函数的参数和选中的单元格生成需要填充的单元格数组
       return cellsToFill.map((cell, i) => {
+        // 根据索引和回归函数的参数计算x的值
         const x = this.calculateXForRegressionFunction(
           i + numbers.length + 1,
           parameters.a,
           parameters.b
         );
+        // 获取选中的单元格
         const selectedCell = selectedCells[i % selectedCells.length];
+        // 根据条件选择需要填充的单元格的属性
         return {
           ...cell,
           text:
