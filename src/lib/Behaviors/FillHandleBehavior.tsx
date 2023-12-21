@@ -25,20 +25,27 @@ export class FillHandleBehavior extends Behavior {
   private fillDirection: Direction = "";
   private fillRange?: Range;
 
+  /**
+   * 当指针进入事件发生时的处理函数
+   * @param event - PointerEvent对象，表示指针事件的信息
+   * @param location - 位置信息，表示事件发生的位置
+   * @param state - 状态信息，表示当前的状态
+   * @returns 返回新的状态信息
+   */
   handlePointerEnter(
     event: PointerEvent,
     location: Location,
     state: State
   ): State {
-    const selectedRange = getActiveSelectedRange(state);
-    this.fillDirection = this.getFillDirection(selectedRange, location);
+    const selectedRange = getActiveSelectedRange(state); // 获取当前选中的范围
+    this.fillDirection = this.getFillDirection(selectedRange, location); // 获取填充方向
     this.fillRange = this.getFillRange(
-      state.cellMatrix,
-      selectedRange,
-      location,
-      this.fillDirection
-    );
-    return { ...state };
+      state.cellMatrix, // 状态的矩阵
+      selectedRange, // 当前选中的范围
+      location, // 事件发生的位置
+      this.fillDirection // 填充方向
+    ); // 获取填充范围
+    return { ...state }; // 返回新的状态信息
   }
 
   handlePointerUp(
@@ -56,6 +63,12 @@ export class FillHandleBehavior extends Behavior {
     const getCompatibleCell = (location: Location) =>
       getCompatibleCellAndTemplate(state, location);
 
+    /**
+     * 填充单元格的预测值
+     * @param selectedCells
+     * @param cellsToFill 需要填充的单元格数组
+     * @returns 填充后的单元格数组
+     */
     const fillCellsWithPredictedValues = (
       selectedCells: Compatible<Cell>[],
       cellsToFill: Compatible<Cell>[]
@@ -63,6 +76,7 @@ export class FillHandleBehavior extends Behavior {
       const numbers = selectedCells.map((cell) => cell.value);
       const parameters = this.findRegressionFunction(
         numbers,
+
         Array.from({ length: numbers.length }, (_, index) => index + 1)
       );
       const areParametersNaNs = isNaN(parameters.a) && isNaN(parameters.b);
@@ -85,6 +99,14 @@ export class FillHandleBehavior extends Behavior {
       });
     };
 
+    /**
+     * 垂直方向填充
+     *
+     * @param state - 当前状态
+     * @param activeSelectedRange - 激活的选中范围
+     * @param direction - 填充方向，可选值为 "up" 或 "down"
+     * @returns 填充后的状态
+     */
     const fillVertically = (
       state: State,
       activeSelectedRange: Range,
@@ -112,6 +134,14 @@ export class FillHandleBehavior extends Behavior {
       return state;
     };
 
+    /**
+     * 水平填充函数
+     *
+     * @param state - 当前状态
+     * @param activeSelectedRange - 被选中的范围
+     * @param direction - 填充方向，可选值为"left"或"right"
+     * @returns 填充后的状态
+     */
     const fillHorizontally = (
       state: State,
       activeSelectedRange: Range,
@@ -123,6 +153,7 @@ export class FillHandleBehavior extends Behavior {
         );
         selectedCells =
           direction === "left" ? selectedCells.reverse() : selectedCells;
+
         if (this.fillRange) {
           let cellsToFill = this.fillRange.columns.map(
             (column) => getCompatibleCell(newLocation(row, column)).cell
@@ -133,12 +164,14 @@ export class FillHandleBehavior extends Behavior {
           );
           cellsToFill =
             direction === "left" ? cellsToFill.reverse() : cellsToFill;
+
+          // 使用cellsToFill填充指定行
           state = this.fillRow(state, row, cellsToFill);
         }
       });
+
       return state;
     };
-
     switch (this.fillDirection) {
       case "right": {
         const newRange = cellMatrix.getRange(
@@ -148,7 +181,10 @@ export class FillHandleBehavior extends Behavior {
 
         state = fillHorizontally(state, activeSelectedRange, "right");
 
-        if (state?.props?.onSelectionChanging && !state.props.onSelectionChanging([newRange])) {
+        if (
+          state?.props?.onSelectionChanging &&
+          !state.props.onSelectionChanging([newRange])
+        ) {
           return state;
         }
 
@@ -161,8 +197,9 @@ export class FillHandleBehavior extends Behavior {
           ],
         };
 
-        state.props?.onSelectionChanged && state.props.onSelectionChanged(state.selectedRanges);
-        
+        state.props?.onSelectionChanged &&
+          state.props.onSelectionChanged(state.selectedRanges);
+
         break;
       }
       case "left": {
@@ -173,7 +210,10 @@ export class FillHandleBehavior extends Behavior {
 
         state = fillHorizontally(state, activeSelectedRange, "left");
 
-        if (state?.props?.onSelectionChanging && !state.props.onSelectionChanging([newRange])) {
+        if (
+          state?.props?.onSelectionChanging &&
+          !state.props.onSelectionChanging([newRange])
+        ) {
           return state;
         }
 
@@ -186,7 +226,8 @@ export class FillHandleBehavior extends Behavior {
           ],
         };
 
-        state.props?.onSelectionChanged && state.props.onSelectionChanged(state.selectedRanges);
+        state.props?.onSelectionChanged &&
+          state.props.onSelectionChanged(state.selectedRanges);
 
         break;
       }
@@ -198,7 +239,10 @@ export class FillHandleBehavior extends Behavior {
 
         state = fillVertically(state, activeSelectedRange, "up");
 
-        if (state?.props?.onSelectionChanging && !state.props.onSelectionChanging([newRange])) {
+        if (
+          state?.props?.onSelectionChanging &&
+          !state.props.onSelectionChanging([newRange])
+        ) {
           return state;
         }
 
@@ -211,7 +255,8 @@ export class FillHandleBehavior extends Behavior {
           ],
         };
 
-        state.props?.onSelectionChanged && state.props.onSelectionChanged(state.selectedRanges);
+        state.props?.onSelectionChanged &&
+          state.props.onSelectionChanged(state.selectedRanges);
 
         break;
       }
@@ -223,7 +268,10 @@ export class FillHandleBehavior extends Behavior {
 
         state = fillVertically(state, activeSelectedRange, "down");
 
-        if (state?.props?.onSelectionChanging && !state.props.onSelectionChanging([newRange])) {
+        if (
+          state?.props?.onSelectionChanging &&
+          !state.props.onSelectionChanging([newRange])
+        ) {
           return state;
         }
 
@@ -236,7 +284,8 @@ export class FillHandleBehavior extends Behavior {
           ],
         };
 
-        state.props?.onSelectionChanged && state.props.onSelectionChanged(state.selectedRanges);
+        state.props?.onSelectionChanged &&
+          state.props.onSelectionChanged(state.selectedRanges);
 
         break;
       }
@@ -245,30 +294,48 @@ export class FillHandleBehavior extends Behavior {
     return state;
   }
 
+  /**
+   * 计算回归函数中的x值
+   * @param y {number} y值
+   * @param a {number} a值
+   * @param b {number} b值
+   * @returns {number} 计算得到的x值
+   */
   calculateXForRegressionFunction(y: number, a: number, b: number): number {
     return Math.round(((y - a) / b) * 1e5) / 1e5;
   }
 
+  /**
+   * 寻找回归函数
+   * @param valuesX X轴数值数组
+   * @param valuesY Y轴数值数组
+   * @returns { a: number; b: number } - 回归函数的斜率和截距
+   */
   findRegressionFunction(
     valuesX: number[],
     valuesY: number[]
   ): { a: number; b: number } {
-    const sumX = this.sumArray(valuesX);
-    const sumY = this.sumArray(valuesY);
-    const sumXY = this.sumArray(this.multipleArrays(valuesX, valuesY));
-    const sumPowX = this.sumArray(this.powerArray(valuesX, 2));
-    const n = valuesX.length;
-    const upValue = Math.fround(n * sumXY - sumX * sumY);
-    const downValue = Math.fround(n * sumPowX - Math.pow(sumX, 2));
-    const b = upValue / downValue;
-    const a = sumY / n - b * (sumX / n);
-    return { a, b };
+    const sumX = this.sumArray(valuesX); // X轴数值之和
+    const sumY = this.sumArray(valuesY); // Y轴数值之和
+    const sumXY = this.sumArray(this.multipleArrays(valuesX, valuesY)); // X轴数值与Y轴数值的乘积之和
+    const sumPowX = this.sumArray(this.powerArray(valuesX, 2)); // X轴数值的平方之和
+    const n = valuesX.length; // 数值数组的长度
+    const upValue = Math.fround(n * sumXY - sumX * sumY); // 上升值
+    const downValue = Math.fround(n * sumPowX - Math.pow(sumX, 2)); // 下降值
+    const b = upValue / downValue; // 回归函数的斜率
+    const a = sumY / n - b * (sumX / n); // 回归函数的截距
+    return { a, b }; // 返回斜率和截距
   }
-
   sumArray(arr: number[]): number {
     return arr.reduce((a, b) => a + b);
   }
 
+  /**
+   * 多个数组相乘
+   * @param first 第一个数组
+   * @param second 第二个数组
+   * @returns 乘法结果数组
+   */
   multipleArrays(first: number[], second: number[]): number[] {
     const result = [];
     const stopCondition =
@@ -283,6 +350,12 @@ export class FillHandleBehavior extends Behavior {
     return arr.map((x) => Math.pow(x, power));
   }
 
+  /**
+   * 渲染部分面板
+   * @param state - 状态对象
+   * @param pane - 范围对象
+   * @returns React节点
+   */
   renderPanePart(state: State, pane: Range): React.ReactNode {
     return (
       this.fillDirection &&
@@ -307,7 +380,13 @@ export class FillHandleBehavior extends Behavior {
       )
     );
   }
-
+  /**
+   * 获取填充方向
+   *
+   * @param selectedRange 选中范围
+   * @param pointerLocation 指针位置
+   * @returns 填充方向
+   */
   private getFillDirection(selectedRange: Range, pointerLocation: Location) {
     // active selection
     const differences: { direction: Direction; value: number }[] = [];
@@ -345,6 +424,14 @@ export class FillHandleBehavior extends Behavior {
     ).direction;
   }
 
+  /**
+   * 根据指定的填充方向获取要填充的范围
+   * @param cellMatrix - 单元格矩阵对象
+   * @param selectedRange - 选中的范围
+   * @param location - 当前单元格的位置
+   * @param fillDirection - 填充方向
+   * @returns 要填充的单元格范围
+   */
   private getFillRange(
     cellMatrix: CellMatrix,
     selectedRange: Range,
@@ -396,6 +483,13 @@ export class FillHandleBehavior extends Behavior {
     return undefined;
   }
 
+  /**
+   * 在给定的行中填充单元格值
+   * @param state - 状态对象
+   * @param row - 行对象
+   * @param values - 要填充的单元格值数组
+   * @returns 更新后的状态对象
+   */
   private fillRow(
     state: State,
     row: GridRow,
@@ -410,7 +504,13 @@ export class FillHandleBehavior extends Behavior {
     });
     return state;
   }
-
+  /**
+   * 在指定列中填充数据，并返回填充后的状态
+   * @param state - 当前状态
+   * @param column - 列对象
+   * @param values - 填充的值数组
+   * @returns 填充后的状态
+   */
   private fillColumn(
     state: State,
     column: GridColumn,

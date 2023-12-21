@@ -11,25 +11,24 @@ context("Fill handle", () => {
     visit();
   });
 
-  it("Fill handle should replicate cell in group A", () => {
+it("Fill handle should replicate cell in group A", () => {
     // ✅
-    const cellRowIdx = 0;
-    const cellColIdx = 6;
+    const cellRowIdx = 0; // 列索引为0的单元格
+    const cellColIdx = 6; // 行索引为6的单元格
     utils
       .getCell(cellRowIdx, cellColIdx)
       .invoke("text")
       .then(($originCellText) => {
-        const startCellX = config.cellWidth * (cellRowIdx + 1);
-        const endCellY = config.cellHeight * (cellColIdx + 1);
+        const startCellX = config.cellWidth * (cellRowIdx + 1); // 起始单元格的横坐标
+        const endCellY = config.cellHeight * (cellColIdx + 1); // 结束单元格的纵坐标
 
-        utils.selectCell(startCellX, endCellY);
-        utils.fillCells(startCellX, endCellY - (config.cellHeight * 3));
+        utils.selectCell(startCellX, endCellY); // 选中起始单元格到结束单元格之间的所有单元格
+        utils.fillCells(startCellX, endCellY - (config.cellHeight * 3)); // 填充选中的单元格
         utils
-          .getCell(cellRowIdx, cellColIdx - 3)
-          .should(($cell) => expect($cell.eq(0)).to.contain($originCellText));
+          .getCell(cellRowIdx, cellColIdx - 3) // 列索引为0，行索引为第6-3=3的单元格
+          .should(($cell) => expect($cell.eq(0)).to.contain($originCellText)); // 判断该单元格是否包含原始单元格的内容
       });
   });
-
   it("Fill handle should replicate cell in group B", () => {
     // ✅
     const cellRowIdx = 1;
