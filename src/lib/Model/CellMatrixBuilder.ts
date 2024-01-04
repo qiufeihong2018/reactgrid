@@ -98,40 +98,56 @@ export class CellMatrixBuilder implements ICellMatrixBuilder {
       return this;
     }
   
+    /**
+     * 设置要渲染的单元格范围查找表
+     * @returns {CellMatrixBuilder} 返回CellMatrixBuilder实例
+     */
     setRangesToRenderLookup(): CellMatrixBuilder {
       let rangesToExclude: Range[] = [];
       this.cellMatrix.rows.forEach((row, idy) => {
+        // 遍历每一行的单元格
         row.cells.forEach((cell, idx) => {
+          // 获取单元格的合并行数和合并列数
           const rowspan = ("rowspan" in cell && cell.rowspan) || 0;
           const colspan = ("colspan" in cell && cell.colspan) || 0;
+          // 根据合并行数和当前行索引生成需要合并的行集合
           const rows = rowspan
             ? this.cellMatrix.rows.slice(idy, idy + rowspan)
             : [this.cellMatrix.rows[idy]];
+          // 根据合并列数和当前列索引生成需要合并的列集合
           const columns = colspan
             ? this.cellMatrix.columns.slice(idx, idx + colspan)
             : [this.cellMatrix.columns[idx]];
+          // 生成需要合并的范围
           const range = new Range(rows, columns);
+          // 获取需要渲染的范围集合
+          const rangesToRender = this.getRangesToRender(range);
+          // 将需要渲染的范围添加到需要排除的范围集合中
           rangesToExclude = [
             ...rangesToExclude,
-            ...this.getRangesToRender(range),
+            ...rangesToRender,
           ];
+          // 将合并单元格的范围添加到单元格查找表中
           this.cellMatrix.spanCellLookup[
             translateLocationIdxToLookupKey(idx, idy)
           ] = { range };
         });
       });
-      // TODO try to optimize by using only lookup
+      // TODO 尝试通过仅使用查找表进行优化
       const keys = rangesToExclude.map((range) =>
         translateLocationIdxToLookupKey(
           range.first.column.idx,
           range.first.row.idx
         )
       );
+      // 遍历this.cellMatrix.spanCellLookup对象的所有键
       Object.keys(this.cellMatrix.spanCellLookup).forEach((key) => {
-        if (!keys.includes(key)) {
-          this.cellMatrix.rangesToRender[key] =
-            this.cellMatrix.spanCellLookup[key];
-        }
+          // 如果keys数组不包含当前键
+          if (!keys.includes(key)) {
+              // 将this.cellMatrix.spanCellLookup[key]的值赋给this.cellMatrix.rangesToRender[key]
+              this.cellMatrix.rangesToRender[key] =
+                  this.cellMatrix.spanCellLookup[key];
+          }
       });
       return this;
     }

@@ -33,7 +33,9 @@ export function getDerivedStateFromProps(
     state = stateDeriverWithProps(state)(disableVirtualScrolling)
   
     if (hasChanged) {
+      // 如果状态有改变
       state = stateDeriverWithProps(state)(updateCellMatrix);
+      // 使用带有属性的状态派生函数更新状态
     }
   
     state = stateDeriverWithProps(state)(updateSelections);
@@ -109,34 +111,42 @@ export function updateStateProps(props: ReactGridProps, state: State): State {
     return state;
 }
 
+/**
+ * 更新单元格矩阵
+ * 
+ * @param props - React网格的属性
+ * @param state - 状态对象
+ * @returns 更新后的状态对象
+ */
 function updateCellMatrix(props: ReactGridProps, state: State): State {
     const builder = new CellMatrixBuilder();
     return {
-        ...state,
-        cellMatrix: builder
-          .setProps(props)
-          .fillRowsAndCols({
-            leftStickyColumns: state.leftStickyColumns || 0,
-            topStickyRows: state.topStickyRows || 0,
-            rightStickyColumns: state.rightStickyColumns || 0,
-            bottomStickyRows: state.bottomStickyRows || 0,
-          })
-          .setRangesToRenderLookup()
-          .fillSticky({
-            leftStickyColumns: state.leftStickyColumns || 0,
-            topStickyRows: state.topStickyRows || 0,
-            rightStickyColumns: state.rightStickyColumns || 0,
-            bottomStickyRows: state.bottomStickyRows || 0,
-          })
-          .fillScrollableRange({
-            leftStickyColumns: state.leftStickyColumns || 0,
-            topStickyRows: state.topStickyRows || 0,
-            rightStickyColumns: state.rightStickyColumns || 0,
-            bottomStickyRows: state.bottomStickyRows || 0,
-          })
-          .setEdgeLocations()
-          .getCellMatrix(),
-      };
+      ...
+      state,
+      cellMatrix: builder
+        .setProps(props) // 设置builder的props属性
+        .fillRowsAndCols({ // 填充builder的行和列
+          leftStickyColumns: state.leftStickyColumns || 0, // 左侧粘性列，如果state.leftStickyColumns为undefined，则为0
+          topStickyRows: state.topStickyRows || 0, // 上方粘性行，如果state.topStickyRows为undefined，则为0
+          rightStickyColumns: state.rightStickyColumns || 0, // 右侧粘性列，如果state.rightStickyColumns为undefined，则为0
+          bottomStickyRows: state.bottomStickyRows || 0, // 下方粘性行，如果state.bottomStickyRows为undefined，则为0
+        })
+        .setRangesToRenderLookup() // 设置需要渲染的范围的查找表
+        .fillSticky({ // 填充sticky
+          leftStickyColumns: state.leftStickyColumns || 0, // 左侧粘性列，如果state.leftStickyColumns为undefined，则为0
+          topStickyRows: state.topStickyRows || 0, // 上方粘性行，如果state.topStickyRows为undefined，则为0
+          rightStickyColumns: state.rightStickyColumns || 0, // 右侧粘性列，如果state.rightStickyColumns为undefined，则为0
+          bottomStickyRows: state.bottomStickyRows || 0, // 下方粘性行，如果state.bottomStickyRows为undefined，则为0
+        })
+        .fillScrollableRange({ // 填充可滚动的范围
+          leftStickyColumns: state.leftStickyColumns || 0, // 左侧粘性列，如果state.leftStickyColumns为undefined，则为0
+          topStickyRows: state.topStickyRows || 0, // 上方粘性行，如果state.topStickyRows为undefined，则为0
+          rightStickyColumns: state.rightStickyColumns || 0, // 右侧粘性列，如果state.rightStickyColumns为undefined，则为0
+          bottomStickyRows: state.bottomStickyRows || 0, // 下方粘性行，如果state.bottomStickyRows为undefined，则为0
+        })
+        .setEdgeLocations() // 设置边缘位置
+        .getCellMatrix() // 获取cellMatrix
+    };
 }
 
 export function updateFocusedLocation(props: ReactGridProps, state: State): State {
