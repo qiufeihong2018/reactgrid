@@ -9,6 +9,12 @@ import { updateSelectedColumns, updateSelectedRows } from './updateState';
 import { resetSelection } from './selectRange';
 
 // TODO: rewrite without division
+/**
+ * 从属性和状态中获取派生状态
+ * @param props React网格属性
+ * @param state 状态
+ * @returns 更新后的状态
+ */
 export function getDerivedStateFromProps(
     props: ReactGridProps,
     state: State
@@ -93,9 +99,8 @@ export const areFocusesDiff = (props: ReactGridProps, state: State): boolean => 
         || (props.stickyRightColumns !== undefined && props.stickyRightColumns !== state.rightStickyColumns) 
         || (props.stickyBottomRows !== undefined && props.stickyBottomRows !== state.bottomStickyRows);
 }
-
+// 导出stateDeriver函数
 export const stateDeriver = (props: ReactGridProps) => (state: State) => (fn: (props: ReactGridProps, state: State) => State): State => fn(props, state);
-
 export const dataHasChanged = (props: ReactGridProps, state: State): boolean => !state.cellMatrix || props !== state.cellMatrix.props
     || (props.stickyLeftColumns !== undefined && props.stickyLeftColumns !== state.leftStickyColumns)
     || (props.stickyTopRows !== undefined && props.stickyTopRows !== state.topStickyRows)

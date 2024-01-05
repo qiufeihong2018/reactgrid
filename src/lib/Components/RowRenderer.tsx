@@ -23,35 +23,44 @@ function shouldMemoRowRenderer(prevProps: RowRendererProps, nextProps: RowRender
         || nextCols[nextCols.length - 1].idx !== prevCols[prevCols.length - 1].idx);
 }
 
+
+// 映射列组件
 const MappedColumns: React.FC<RowRendererProps> = ({ columns, row, cellRenderer, borders, state }) => {
+    // 获取最后一个列的索引
     const lastColIdx = columns[columns.length - 1].idx;
     const CellRenderer = cellRenderer;
+
     return (
         <>
             {columns.map(column => {
+                // 获取该列的范围
                 const range = state.cellMatrix.rangesToRender[translateLocationIdxToLookupKey(column.idx, row.idx)]?.range;
                 if (!range) {
                     return null;
                 }
+                // 定义位置
                 const location: Location = { row, column };
-                return <CellRenderer
-                    key={row.idx + '-' + column.idx}
-                    borders={{
-                        ...borders,
-                        left: borders.left && column.left === 0,
-                        right: (borders.right && column.idx === lastColIdx) || !(state.cellMatrix.scrollableRange.last.column.idx === location.column.idx)
-                    }}
-                    state={state}
-                    location={location}
-                    range={range}
-                    currentlyEditedCell={state.currentlyEditedCell}
-                    update={state.update}
-                />
+
+                return (
+                    // 渲染单元格渲染器
+                    <CellRenderer
+                        key={row.idx + '-' + column.idx}
+                        borders={{
+                            ...borders,
+                            left: borders.left && column.left === 0,
+                            right: (borders.right && column.idx === lastColIdx) || !(state.cellMatrix.scrollableRange.last.column.idx === location.column.idx)
+                        }}
+                        state={state}
+                        location={location}
+                        range={range}
+                        currentlyEditedCell={state.currentlyEditedCell}
+                        update={state.update}
+                    />
+                );
             })}
         </>
     );
 };
-
 export const RowRenderer: React.NamedExoticComponent<RowRendererProps> = React.memo(MappedColumns, shouldMemoRowRenderer);
 
 RowRenderer.displayName = 'RowRenderer';

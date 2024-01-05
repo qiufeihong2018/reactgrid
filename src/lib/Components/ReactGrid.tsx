@@ -50,11 +50,18 @@ export class ReactGrid extends React.Component<ReactGridProps, State> {
       .setEdgeLocations()
       .getCellMatrix(),
   };
-
+  
+  /**
+   * 从属性和状态中派生新的状态。
+   * 
+   * @param props - 组件的属性。
+   * @param state - 组件的状态。
+   * @returns 新的状态，或者null表示不更新状态。
+   */
   static getDerivedStateFromProps(
-    props: ReactGridProps,
-    state: State
-  ): State | null {
+      props: ReactGridProps,
+      state: State
+    ): State | null {
     try {
       return getDerivedStateFromProps(props, state);
     } catch (error) {

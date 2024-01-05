@@ -49,6 +49,7 @@ export class CellMatrix {
     rowIndexLookup: IndexLookup = {};
     columnIndexLookup: IndexLookup = {};
 
+    // 创建一个对象，用于存储 SpanLookup，key 为字符串类型的 location
     spanCellLookup: { [location: string]: SpanLookup } = {};
 
     rangesToRender: { [location: string]: SpanLookup } = {};
@@ -98,6 +99,12 @@ export class CellMatrix {
 
 }
 
+/**
+ * 将位置索引转换为查找键值
+ * @param idx x轴索引
+ * @param idy y轴索引
+ * @returns 查找键值
+ */
 export function translateLocationIdxToLookupKey(idx: number, idy: number): string {
     return `${idx}, ${idy}`;
 }
