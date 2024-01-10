@@ -1,16 +1,16 @@
 import * as React from 'react';
 
 interface HintProps {
-    linePosition: number;
-    left: number;
-    offset: number;
+    linePosition: number; // 提示线的位置
+    left: number; // 左侧距离
+    offset: number; // 偏移量
 }
 
-// TODO these component props should be calculated directly by behaviour (only integers) 
+// TODO 这些组件属性应该由行为直接计算(只保留整数)
 export const ResizeHint: React.FC<HintProps> = ({ left, linePosition, offset }) => {
     return (
         <>
-            {linePosition !== -1 &&
+            {linePosition !== -1 && (
                 <div
                     className={`rg-column-resize-hint`}
                     style={{
@@ -19,6 +19,7 @@ export const ResizeHint: React.FC<HintProps> = ({ left, linePosition, offset }) 
                 >
                     <span style={{ whiteSpace: 'nowrap' }}>Width: {Math.floor(linePosition - left - offset)}px</span>
                 </div>
+            )
             }
         </>
     )

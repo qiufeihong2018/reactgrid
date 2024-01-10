@@ -21,7 +21,13 @@ export class ResizeColumnBehavior extends Behavior {
   private initialLocation!: PointerLocation;
   autoScrollDirection: Direction = "horizontal";
   isInScrollableRange!: boolean;
-
+  /**
+   * 处理指针按下事件
+   * @param event - PointerEvent对象
+   * @param location - PointerLocation对象
+   * @param state - State对象
+   * @returns 修改后的State对象
+   */
   handlePointerDown(
     event: PointerEvent,
     location: PointerLocation,
@@ -34,6 +40,13 @@ export class ResizeColumnBehavior extends Behavior {
     );
     return state;
   }
+  /**
+   * 当指针移动时处理函数
+   * @param event - PointerEvent对象，表示指针事件
+   * @param location - PointerLocation对象，表示指针位置
+   * @param state - State对象，表示当前状态
+   * @returns 更新后的状态
+   */
   handlePointerMove(
     event: PointerEvent,
     location: PointerLocation,
@@ -43,17 +56,27 @@ export class ResizeColumnBehavior extends Behavior {
     if (
       !(
         (location.column.idx === this.resizedColumn.idx &&
-          location.cellX > (state.props?.minColumnWidth ?? CellMatrix.MIN_COLUMN_WIDTH)) ||
+          location.cellX >
+            (state.props?.minColumnWidth ?? CellMatrix.MIN_COLUMN_WIDTH)) ||
         location.column.idx > this.resizedColumn.idx
       )
     ) {
       const offset = this.getLinePositionOffset(state);
       linePosition =
-        (state.props?.minColumnWidth ?? CellMatrix.MIN_COLUMN_WIDTH) + this.resizedColumn.left + offset;
+        (state.props?.minColumnWidth ?? CellMatrix.MIN_COLUMN_WIDTH) +
+        this.resizedColumn.left +
+        offset;
     }
     return { ...state, linePosition, lineOrientation: "vertical" };
   }
-
+  /**
+   * 处理鼠标抬起事件
+   *
+   * @param event - PointerEvent对象
+   * @param location - PointerLocation对象
+   * @param state - 状态对象
+   * @returns 状态对象
+   */
   handlePointerUp(
     event: PointerEvent,
     location: PointerLocation,
@@ -67,7 +90,7 @@ export class ResizeColumnBehavior extends Behavior {
       const newColWidth =
         newWidth >= (state.props?.minColumnWidth ?? CellMatrix.MIN_COLUMN_WIDTH)
           ? newWidth
-          : (state.props?.minColumnWidth ?? CellMatrix.MIN_COLUMN_WIDTH);
+          : state.props?.minColumnWidth ?? CellMatrix.MIN_COLUMN_WIDTH;
       state.props.onColumnResized(
         this.resizedColumn.columnId,
         newColWidth,
@@ -85,9 +108,11 @@ export class ResizeColumnBehavior extends Behavior {
     return { ...state, linePosition: -1, focusedLocation };
   }
 
-  //should render ResizeHint on pane which has got the highest priority
+  // 在具有最高优先级的面板上渲染ResizeHint
   renderPanePart(state: State, pane: Range): React.ReactNode {
     const offset = this.getLinePositionOffset(state);
+
+    // 如果初始位置在面板内，则渲染ResizeHint
     return (
       pane.contains(this.initialLocation) && (
         <ResizeHint
@@ -98,7 +123,11 @@ export class ResizeColumnBehavior extends Behavior {
       )
     );
   }
-
+  /**
+   * 获取行位置偏移量
+   * @param state - 状态对象
+   * @returns 偏移量
+   */
   getLinePositionOffset(state: State): number {
     const { scrollLeft } = getScrollOfScrollableElement(
       state.scrollableElement
