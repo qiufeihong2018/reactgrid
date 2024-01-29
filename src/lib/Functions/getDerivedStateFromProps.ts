@@ -125,7 +125,7 @@ export const dataHasChanged = (props: ReactGridProps, state: State): boolean =>
     props.stickyBottomRows !== state.bottomStickyRows) ||
   (props.stickyRightColumns !== undefined &&
     props.stickyRightColumns !== state.rightStickyColumns);
-    
+
 export const highlightsHasChanged = (
   props: ReactGridProps,
   state: State
@@ -178,6 +178,13 @@ function updateCellMatrix(props: ReactGridProps, state: State): State {
   };
 }
 
+/**
+ * 更新焦点位置
+ *
+ * @param props - React网格组件的属性
+ * @param state - 状态对象
+ * @returns 更新后的状态对象
+ */
 export function updateFocusedLocation(
   props: ReactGridProps,
   state: State

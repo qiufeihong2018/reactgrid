@@ -3,6 +3,12 @@ import { PaneContentChild, Range } from "../../core";
 import { PartialArea } from "./PartialArea";
 import { isRangeIntersects } from "../Functions/isRangeIntersectsWith";
 
+/**
+ * 选中的范围
+ * @param state - 组件状态
+ * @param calculatedRange - 计算过的范围
+ * @returns 选中的范围的组件
+ */
 export const SelectedRanges: React.FC<PaneContentChild> = ({
   state,
   calculatedRange,

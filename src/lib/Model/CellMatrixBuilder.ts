@@ -200,6 +200,11 @@ export class CellMatrixBuilder implements ICellMatrixBuilder {
     return result;
   }
 
+  /**
+   * 设置粘性边缘
+   * @param edges - 粘性边缘配置对象
+   * @returns CellMatrixBuilder - CellMatrixBuilder实例
+   */
   fillSticky(
     edges: StickyEdges = {
       leftStickyColumns: 0,
@@ -332,18 +337,24 @@ export class CellMatrixBuilder implements ICellMatrixBuilder {
     );
   }
 
+  /**
+   * 获取粘性列在矩阵中最左边的位置索引
+   * @param stickyColumnsLeft 左侧粘性列的宽度
+   * @param stickyColumnsRight 右侧粘性列的宽度
+   * @returns 粘性列在矩阵中最左边的位置索引
+   */
   private getStickyRightFirstIdx(
     stickyColumnsLeft: number,
     stickyColumnsRight: number
   ): number {
-    const stickyRightColumns = stickyColumnsRight || 0;
-    const stickyLeftColumns = stickyColumnsLeft || 0;
-    const columns = this.cellMatrix.props.columns.length;
+    const stickyRightColumns = stickyColumnsRight || 0; // 右侧粘性列的宽度，若未定义则默认为0
+    const stickyLeftColumns = stickyColumnsLeft || 0; // 左侧粘性列的宽度，若未定义则默认为0
+    const columns = this.cellMatrix.props.columns.length; // 矩阵中列的数量
     return (
       columns -
       (stickyRightColumns + stickyLeftColumns > columns
         ? 0
-        : stickyRightColumns)
+        : stickyRightColumns) // 如果左侧和右侧粘性列的宽度之和大于矩阵中列的数量，则返回0，否则返回粘性列在矩阵中最左边的位置索引
     );
   }
 

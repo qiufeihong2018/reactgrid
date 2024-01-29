@@ -38,16 +38,15 @@ export function handleKeyDown(state: State, event: KeyboardEvent): State {
 }
 
 // TODO: rewrite/simplify if possible
-function handleKeyDownInternal(
-  state: State,
-  event: KeyboardEvent
-): State {
+function handleKeyDownInternal(state: State, event: KeyboardEvent): State {
   const location = state.focusedLocation;
   if (!location) {
     return state;
   }
 
-  const asr = getActiveSelectedRange(state) ?? state.cellMatrix.getRange(location, location);
+  const asr =
+    getActiveSelectedRange(state) ??
+    state.cellMatrix.getRange(location, location);
 
   if (event.ctrlKey && isMacOs()) {
     switch (event.keyCode) {
@@ -118,7 +117,10 @@ function handleKeyDownInternal(
 
         const newRange = cm.getRange(cm.first, cm.last);
 
-        if (state.props?.onSelectionChanging && !state.props.onSelectionChanging([newRange])) {  
+        if (
+          state.props?.onSelectionChanging &&
+          !state.props.onSelectionChanging([newRange])
+        ) {
           return state;
         }
 
@@ -263,11 +265,16 @@ function moveFocusInsideSelectedRange(
   asr: Range,
   location: Location
 ): State {
+  // 获取当前选中的范围的索引
   const selectedRangeIdx = state.activeSelectedRangeIdx;
+  // 获取列数
   const colCount = asr ? asr.columns.length : 0;
+  // 获取行数
   const rowCount = asr ? asr.rows.length : 0;
+  // 根据方向确定增量值
   const delta = direction === "up" || direction === "left" ? -1 : 1;
 
+  // 计算当前位置在范围中的索引
   const currentPosInRange =
     direction === "up" || direction === "down"
       ? location.row.idx -
@@ -276,12 +283,15 @@ function moveFocusInsideSelectedRange(
       : (location.row.idx - asr.first.row.idx) * colCount +
         (location.column.idx - asr.first.column.idx);
 
+  // 计算新位置在范围中的索引
   const newPosInRange =
     (currentPosInRange + delta) % (asr.rows.length * asr.columns.length);
 
+  // 判断是否需要按下Shift键加Tab键
   const onShiftAndTabKeys =
     (newPosInRange < 0 && currentPosInRange === 0) ||
     (rowCount === 1 && colCount === 1 && delta === -1);
+  // 判断是否需要按下Tab键
   const onTabKey =
     (newPosInRange === 0 &&
       currentPosInRange === asr.rows.length * asr.columns.length - 1 &&
@@ -292,20 +302,24 @@ function moveFocusInsideSelectedRange(
         (rowCount >= 1 && colCount === 2)) &&
       delta === 1) ||
     (newPosInRange < 0 && currentPosInRange === 0) ||
-    (rowCount === 1 && colCount === 1 && delta === 1); // must be so complicated
-
+    (rowCount === 1 && colCount === 1 && delta === 1); // 必须很复杂
   if (onShiftAndTabKeys) {
     // shift + tab/enter and first cell focused in active range
+    // 如果按下了shift+tab/enter键并且第一个单元格位于活动范围中
     const nextSelectionRangeIdx =
       selectedRangeIdx === 0
         ? state.selectedRanges.length - 1
         : (selectedRangeIdx - 1) % state.selectedRanges.length;
+    // 下一个选择范围索引为：如果第一个单元格被选中，则下一个选择范围为最后一个
+    // 如果不是第一个单元格被选中，则下一个选择范围为当前选择范围减1
     const nextSelection = state.selectedRanges[nextSelectionRangeIdx];
+    // 设置活动范围中的焦点位置为下一个选择范围的最后一个单元格
     state = focusLocation(
       state,
       newLocation(nextSelection.last.row, nextSelection.last.column),
       false
     );
+    // 返回更新后的状态对象，包含下一个选择范围的索引
     return { ...state, activeSelectedRangeIdx: nextSelectionRangeIdx };
   } else if (onTabKey) {
     // tab/enter and last cell focused in active range
@@ -698,7 +712,10 @@ function resizeSelection(
     scrollIntoView(state, top, left);
   }
 
-  if (state.props?.onSelectionChanging && !state.props.onSelectionChanging(selectedRanges)) {
+  if (
+    state.props?.onSelectionChanging &&
+    !state.props.onSelectionChanging(selectedRanges)
+  ) {
     // 如果选择范围改变被取消，我们可以直接返回状态对象
     // TODO: 可是没有找到调整选择范围的实用场景，而且我还没有找到一个简单的方法 - 就像我最近发现的那样，这并不是一个简单的问题
     // TODO: 另外，我们可以添加一个外部更改选择的方法，这样用户就可以自己实现这个功能
