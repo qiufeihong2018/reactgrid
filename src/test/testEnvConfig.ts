@@ -29,10 +29,10 @@ export const config: TestConfig = {
 
     lineWidth: 1,
 
-    stickyTop: 3,
-    stickyBottom: 3,
-    stickyLeft: 2,
-    stickyRight: 2,
+    stickyTop: 1,
+    // stickyBottom: 3,
+    // stickyLeft: 2,
+    // stickyRight: 2,
 
     focusLocation: { columnId: 'col-1', rowId: 'row-3' },
     initialFocusLocation: { columnId: 'col-1', rowId: 'row-2' },
