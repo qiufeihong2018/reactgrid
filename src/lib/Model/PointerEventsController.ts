@@ -235,16 +235,13 @@ export class PointerEventsController extends AbstractPointerEventsController {
       });
     };
 
-
     private handleCut = (event: ClipboardEvent) => {
       this.updateState((state) => {
         handleCut();
         return state;
       });
     };
-  }
   
-
     private handleDoubleClick = (event: MouseEvent): void => {
       if ((event.target as HTMLDivElement).className === "rg-resize-handle") {
         this.updateState((state) => {
@@ -256,4 +253,4 @@ export class PointerEventsController extends AbstractPointerEventsController {
       }
     };
   }
-
+  
