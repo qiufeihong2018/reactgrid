@@ -10,6 +10,7 @@ import { isOnClickableArea } from '../Functions/isOnClickableArea';
 import { scrollCalculator } from '../Functions/componentDidUpdate';
 import { scrollIntoView } from '../Functions/scrollIntoView';
 import { areLocationsEqual } from '../Functions/areLocationsEqual';
+import { handleCut } from '../Functions/handleCut';
 
 
 export class PointerEventsController extends AbstractPointerEventsController {
@@ -55,6 +56,8 @@ export class PointerEventsController extends AbstractPointerEventsController {
         event.clientX,
         event.clientY
       );
+
+      window.addEventListener("cut", this.handleCut as EventListener);
       return this.handlePointerDownInternal(event, currentLocation, state);
     };
   
@@ -232,6 +235,16 @@ export class PointerEventsController extends AbstractPointerEventsController {
       });
     };
 
+
+    private handleCut = (event: ClipboardEvent) => {
+      this.updateState((state) => {
+        handleCut();
+        return state;
+      });
+    };
+  }
+  
+
     private handleDoubleClick = (event: MouseEvent): void => {
       if ((event.target as HTMLDivElement).className === "rg-resize-handle") {
         this.updateState((state) => {
@@ -243,3 +256,4 @@ export class PointerEventsController extends AbstractPointerEventsController {
       }
     };
   }
+
