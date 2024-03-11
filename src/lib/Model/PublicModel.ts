@@ -591,19 +591,25 @@ export interface Span {
  *
  * @see https://reactgrid.com/docs/3.1/7-api/0-interfaces/4-cell/
  */
+/**
+ * 定义一个单元格的接口。
+ * 
+ * @typeParam Id - 表示单元格所属组的ID的类型。
+ * @typeParam CellStyle - 表示单元格样式属性的类型。
+ * 
+ * @property {string} type - 单元格类型的名称，必须唯一。
+ * @property {boolean} [nonEditable=false] - 标记单元格为不可编辑，默认为`false`。
+ * @property {Id} [groupId] - 表示此单元格所属组的`Id`。
+ * @property {CellStyle} [style] - 包含在`CellStyle`接口中的允许的样式属性。
+ * @property {string} [className] - 额外的CSS类名。
+ */
 export interface Cell {
-  /** Name of cell type, must be unique */
   type: string;
-  /** Marks cell as non editable (by default: `false`) */
   nonEditable?: boolean;
-  /** `Id` of group to which this cell belongs to */
   groupId?: Id;
-  /** Allowed style properties contained in `CellStyle` interface */
   style?: CellStyle;
-  /** Additional CSS classes */
   className?: string;
 }
-
 /**
  * Cell type marker - every field of `TCell` is optional.
  * Cell of this type will have only one essential field provided by `Cell` interface - `type`.
