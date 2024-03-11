@@ -33,7 +33,6 @@ export const config: TestConfig = {
     // stickyBottom: 3,
     // stickyLeft: 2,
     // stickyRight: 2,
-
     focusLocation: { columnId: 'col-1', rowId: 'row-3' },
     initialFocusLocation: { columnId: 'col-1', rowId: 'row-2' },
 
@@ -78,7 +77,9 @@ export const config: TestConfig = {
         padding: 20,
         position: 'relative',
     },
-
+    stickyBottom: 0,
+    stickyLeft: 0,
+    stickyRight: 0
 }
 
 /**
