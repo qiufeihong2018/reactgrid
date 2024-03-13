@@ -56,7 +56,7 @@ export function pasteData(state: State, rows: Compatible<Cell>[][]): State {
       })
     );
     if (!lastLocation) {
-      return state;
+      return {...state, copyRange: undefined};
     }
 
     const newRange = cellMatrix.getRange(
@@ -64,11 +64,9 @@ export function pasteData(state: State, rows: Compatible<Cell>[][]): State {
       lastLocation
     );
 
-    if (
-      state?.props?.onSelectionChanging &&
-      !state.props.onSelectionChanging([newRange])
-    ) {
-      return state;
+
+    if (state?.props?.onSelectionChanging && !state.props.onSelectionChanging([newRange])) {
+      return {...state, copyRange: undefined};
     }
 
     state?.props?.onSelectionChanged &&
@@ -76,11 +74,12 @@ export function pasteData(state: State, rows: Compatible<Cell>[][]): State {
 
     return {
       ...state,
+      copyRange: undefined,
       selectedRanges: [
         cellMatrix.getRange(activeSelectedRange.first, lastLocation),
       ],
       activeSelectedRangeIdx: 0,
     };
   }
-  return state;
+  return {...state, copyRange: undefined};
 }

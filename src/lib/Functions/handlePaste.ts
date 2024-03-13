@@ -47,6 +47,6 @@ export function handlePaste(event: ClipboardEvent, state: State): State {
         );
     }
     event.preventDefault();
-    return { ...pasteData(state, pastedRows), copyRange: undefined };
+    return { ...pasteData(state, pastedRows)};
   }
   
