@@ -50,6 +50,7 @@ export class PointerEventsController extends AbstractPointerEventsController {
   
       window.addEventListener("pointermove", this.handlePointerMove);
       window.addEventListener("pointerup", this.handlePointerUp);
+      window.addEventListener("dblclick", this.handleDoubleClick);
       const currentLocation = getLocationFromClient(
         state as State,
         event.clientX,
@@ -239,6 +240,17 @@ export class PointerEventsController extends AbstractPointerEventsController {
         handleCut();
         return state;
       });
+    };
+  
+    private handleDoubleClick = (event: MouseEvent): void => {
+      if ((event.target as HTMLDivElement).className === "rg-resize-handle") {
+        this.updateState((state) => {
+          const currentLocation = getLocationFromClient(state as State, event.clientX, event.clientY);
+          state = { ...state, currentBehavior: new ResizeColumnBehavior() };
+          state = state.currentBehavior.handleDoubleClick(event as PointerEvent, currentLocation, state);
+          return state;
+        });
+      }
     };
   }
   
