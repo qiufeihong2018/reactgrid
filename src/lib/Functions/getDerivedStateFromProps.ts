@@ -63,6 +63,15 @@ export function getDerivedStateFromProps(
   return state;
 }
 
+/**
+ * 更新选择状态
+ * 1. 如果是选择行，那么更新选中的行
+ * 2. 如果是选择列，那么更新选中的列
+ * 3. 如果是选择范围，那么更新选中的范围
+ * @param props 
+ * @param state 
+ * @returns 
+ */
 function updateSelections(props: ReactGridProps, state: State): State {
   if (state.selectionMode === "row" && state.selectedIds.length > 0) {
     state = updateSelectedRows(state);
