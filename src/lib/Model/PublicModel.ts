@@ -13,6 +13,11 @@ import {
 import { Range } from './Range';
 
 /**
+ * `Range` is a class. This class represents a rectangular area with a width, height, upper-left position, and lower-right position.
+ */
+export { Range }
+
+/**
  * `SelectionMode` is a marker for currect selection mode
  * 
  * @see https://reactgrid.com/docs/3.1/7-api/1-types/7-selection-mode/
@@ -64,6 +69,8 @@ export interface ReactGridProps {
     readonly enableGroupIdRender?: boolean;
     /** Set `true` to disable virtual scrolling (by default `false`) */
     readonly disableVirtualScrolling?: boolean;
+    /** Set `true` to allow pasting cells outside of the grid (by default `false`) */
+    readonly allowExtendPasteRange?: boolean;
     /** 
      * Horizontal breakpoint in percents (%) of ReactGrid scrollable parent element width. 
      * Disables sticky when the sum of the sizes of sticky panes overflows
