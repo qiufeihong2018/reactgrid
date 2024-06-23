@@ -12,7 +12,9 @@ export const VS_PAGE_HEIGHT = 400;
 export const VS_PAGE_WIDTH = 300;
 const ADDITONAL_INDEX = 1; // is needed for getting last element in array
 
+
 /**
+ * 他这里使用监听scoll来计算可视区域，滚动时会产生卡顿，我们可以把他优化成IntersectionObserver，性能会更好
  * 重新计算可见范围
  * @param state 状态对象
  * @returns 更新后的状态对象
